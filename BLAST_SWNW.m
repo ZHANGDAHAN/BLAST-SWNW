@@ -34,7 +34,7 @@ if length(varargin)==4
     data_Query = cell(testseqnum,1);
     for i=1:testseqnum
         data_Query{i,1}=data(i).Query;    %提取出data中的Query
-%         location_real(1,i)=str2num(data_Query{i,1}(strfind(data_Query{i,1},'#')+6:strfind(data_Query{i,1},'_')-1));
+        %         location_real(1,i)=str2num(data_Query{i,1}(strfind(data_Query{i,1},'#')+6:strfind(data_Query{i,1},'_')-1));
     end
     
     % align two sequences using Smith-Waterman algorithm and Needleman-Wunsch algorithm
@@ -44,10 +44,12 @@ if length(varargin)==4
     [ min_P, ~, best_loc ] = sw_nw_dahan( ENTRY,  seq,  data, Header_drill, seq_drill );
     output=cell(testseqnum,3);
     %% predict output
+    classify_24={'Cellmembrane', 'cellwall','chloroplast','chloroplast membrane','chloroplast thylakoid','chloroplast thylakoid membrane','Cytoplasm','Endoplasmic reticulum','Endoplasmicreticulummembrane','Golgiapparatus','Golgistackmembrane','Lysosome','Lysosome membrane','Mitochondrion','Mitochondrion membrane','Nucleus','Nucleus membrane','Peroxisome','Peroxisome membrane','Plastid','Plastid membrane','Secreted','Vacuole','Vacuole membrane'};
     for i=1:testseqnum
         output{i,1}=data(i).Query;
-        output{i,2}=best_loc{i};
+        output{i,2}=classify_24{str2num(best_loc{i}((strfind(best_loc{i},'class')+5):(strfind(best_loc{i},'_')-1)))};
         output{i,3}=min_P(i);
+        
     end
     %     run_time=toc;
     % else   %%% return Error message.
@@ -107,10 +109,18 @@ for i=1:length(data_filter_1en1)
     else
         min_P(i,1)=nan;
         loc_min_P(i,1)=nan;
+        
+        
+        
+        
+        
+        
         best_loc{i,1}='';
     end
 end
 end
+
+
 
 
 
